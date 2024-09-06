@@ -1,0 +1,14 @@
+services:
+  engine:
+    image: mariadb
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MARIADB_ROOT_PASSWORD: <SUPER_SECRET_PASSWORD>
+      
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
