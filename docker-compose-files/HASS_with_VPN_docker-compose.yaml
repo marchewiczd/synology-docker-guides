@@ -1,0 +1,60 @@
+name: home-assistant-setup
+
+services:
+    vpn:
+        image: tailscale/tailscale:latest
+        hostname: vpn
+        restart: unless-stopped
+        environment:
+            - TS_AUTHKEY=<API_KEY>?ephemeral=false
+            - TS_EXTRA_ARGS=--advertise-tags=tag:container
+            - TS_SERVE_CONFIG=/config/serve.json
+            - TS_STATE_DIR=/var/lib/tailscale
+        volumes:
+            - ./tailscale/state:/var/lib/tailscale
+            - ./tailscale/config:/config
+            - /dev/net/tun:/dev/net/tun
+        ports:
+            - 8123:8123
+            - 8124:8080
+        cap_add:
+            - net_admin
+            - sys_module
+            
+    mqtt:
+        image: eclipse-mosquitto
+        restart: unless-stopped
+        volumes: 
+            - ./mosquitto/data:/mosquitto/data
+            - ./mosquitto/config:/mosquitto/config
+            - ./mosquitto/log:/mosquitto/log
+        depends_on:
+            - vpn
+        network_mode: service:vpn
+
+    zigbee:
+        image: koenkk/zigbee2mqtt
+        restart: unless-stopped
+        volumes:
+            - ./zigbee2mqtt/data:/app/data
+            - /run/udev:/run/udev:ro
+        devices:
+            - /dev/ttyUSB0:/dev/ttyACM0
+        depends_on:
+            - mqtt
+            - vpn
+        network_mode: service:vpn
+            
+    hass:
+       image: ghcr.io/home-assistant/home-assistant:stable
+       restart: unless-stopped
+       volumes:
+            - ./hass:/config
+            - ./hass/localtime:/etc/localtime:ro
+            - /run/dbus:/run/dbus:ro
+       privileged: true
+       depends_on:
+            - mqtt
+            - zigbee
+            - vpn
+        network_mode: service:vpn
