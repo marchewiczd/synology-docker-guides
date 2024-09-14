@@ -6,6 +6,7 @@
     * [Get the M2 NVME working as a storage pool](#get-the-m2-nvme-working-as-a-storage-pool)
     * [Get the USB drivers](#get-the-usb-drivers)
     * [Setting up Docker](#setting-up-docker)
+    * [Freeing ports 80 and 443](#freeing-ports-80-and-443)
 2. [Setting up HASS project](#setting-up-hass-project)
     * [Setting up directories for the project](#setting-up-directories-for-the-project)
     * [**(Optional)** Getting OAuth key for Tailscale VPN](#optional-getting-oauth-key-for-tailscale-vpn)
@@ -47,6 +48,12 @@ USB drivers are needed for example for Zigbee2MQTT adapters to function and be d
 
 1. Package Center
 2. Find and install Container Manager
+
+## Freeing ports 80 and 443
+
+1. Connect via SSH
+2. Run `sed -i -e 's/80/81/' -e 's/443/444/' /usr/syno/share/nginx/server.mustache /usr/syno/share/nginx/DSM.mustache /usr/syno/share/nginx/WWWService.mustache` - this replaces ports 80 with 81 and 443 with 444 for redirection to main page
+3. Run `systemctl restart nginx` to restart web server
 
 # Setting up HASS project
 
