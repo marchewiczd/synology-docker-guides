@@ -9,11 +9,13 @@
     * [Freeing ports 80 and 443](#freeing-ports-80-and-443)
 2. [Setting up HASS project](#setting-up-hass-project)
     * [Setting up directories for the project](#setting-up-directories-for-the-project)
-    * [**(Optional)** Getting OAuth key for Tailscale VPN](#optional-getting-oauth-key-for-tailscale-vpn)
     * [Setting up Mosquitto with authentication](#setting-up-mosquitto-with-authentication)
     * [Setting up Zigbee2MQTT](#setting-up-zigbee2mqtt)
     * [Setting up Home Assistant](#setting-up-home-assistant)
-3. [Troubleshooting](#troubleshooting)
+3. [Setting up VPN](#setting-up-vpn)
+    * [Getting OAuth key for Tailscale VPN](#getting-oauth-key-for-tailscale-vpn)
+    * [Fixing networking between containers](#fixing-networking-between-containers)
+4. [Troubleshooting](#troubleshooting)
     * [Bind mount failed: '/dev/net/tun' does not exist*](#bind-mount-failed-devnettun-does-not-exist)
     * [Mosquitto: Unable to open pwfile](#mosquitto-unable-to-open-pwfile)
 
@@ -142,7 +144,7 @@ Optional if you don't want to use VPN.
 
 ## Fixing networking between containers
 
-1. `network_moode: service` causes containers to act as they are within the same container so they have to be connected using `localhost` (or `127.0.0.1`).
+1. `network_moode: service` causes containers to act as they are within the same network so they have to be connected using `localhost` (or `127.0.0.1`).
 2. Zigbee2mqtt - in `/home-assistant/zigbee2mqtt/data/configuration.yml` change `mqtt:server` to `mqtt://localhost`
 3. HASS - in Integrations (Settings -> Devices & Services -> Integrations Tab) update MQTT broker options (MQTT -> CONFIGURE -> RE-CONFIGURE MQTT) to broker `localhost`
 
