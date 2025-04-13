@@ -13,6 +13,7 @@
     * [Setting up Zigbee2MQTT](#setting-up-zigbee2mqtt)
     * [Setting up Home Assistant](#setting-up-home-assistant)
 3. [Setting up VPN](#setting-up-vpn)
+    * [Adding tags](#adding-tags)
     * [Getting OAuth key for Tailscale VPN](#getting-oauth-key-for-tailscale-vpn)
     * [Fixing networking between containers](#fixing-networking-between-containers)
 4. [Troubleshooting](#troubleshooting)
@@ -133,12 +134,23 @@ device_options:
 
 Optional if you don't want to use VPN.
 
+## Adding tags
+
+1. Go to [Access controls](https://login.tailscale.com/admin/acls/file) tab in admin panel
+2. Add tag under `tagOwners` section, e.g.:
+
+```json
+ "tagOwners": {
+  "tag:container": ["autogroup:admin"],
+ },
+```
+
 ## Getting OAuth key for Tailscale VPN
 
 1. First get tailscale OAuth key from your Tailscale account [https://login.tailscale.com/admin/settings/oauth]
 2. Click Generate OAuth client to start creating the key
 3. Select: `Keys:Auth Keys` - selecting OAuth Keys will result in 403 errors later on
-4. Add tag:container for tags
+4. Add `tag:container` for tags
 5. Click generate client to create your OAuth key
 6. Save auth key and replace it in docker compose - **!IMPORTANT!** this is your only chance to save this key if you lose it you will have to create a new one!
 
