@@ -70,17 +70,6 @@ Using Tailscale as an example:
 2. Same goes for `./tailscale/config`
 3. `/dev/net/tun` should already exist and shouldn't be tampered with unless there's a problem, in that case go to [*Troubleshooting: Bind mount failed: '/dev/net/tun' does not exist*](#bind-mount-failed-devnettun-does-not-exist)
 
-## **(Optional)** Getting OAuth key for Tailscale VPN
-
-You can skip this step and remove Tailscale service from docker-compose if you do not want to use VPN.
-
-1. First get tailscale OAuth key from your Tailscale account [https://login.tailscale.com/admin/settings/oauth]
-2. Click Generate OAuth client to start creating the key
-3. Select write for devices
-4. Add tag:container for tags
-5. Click generate client to create your OAuth key
-6. Save auth key and replace it in docker compose - **!IMPORTANT!** this is your only chance to save this key if you lose it you will have to create a new one!
-
 ## Setting up Mosquitto with authentication
 
 1. Create config file in `/mosquitto/config` named `mosquitto.conf` with below content:
@@ -137,6 +126,25 @@ device_options:
 5. Add MQTT integration (Add integration -> MQTT -> MQTT)
 6. Broker: `mqtt`, port: `1883`, username: `<mosquitto_user>`, password: `<mosquitto_password>`
 7. Everything should be able to communicate between each other
+
+# Setting up VPN
+
+Optional if you don't want to use VPN.
+
+## Getting OAuth key for Tailscale VPN
+
+1. First get tailscale OAuth key from your Tailscale account [https://login.tailscale.com/admin/settings/oauth]
+2. Click Generate OAuth client to start creating the key
+3. Select: `Keys:Auth Keys` - selecting OAuth Keys will result in 403 errors later on
+4. Add tag:container for tags
+5. Click generate client to create your OAuth key
+6. Save auth key and replace it in docker compose - **!IMPORTANT!** this is your only chance to save this key if you lose it you will have to create a new one!
+
+## Fixing networking between containers
+
+1. `network_moode: service` causes containers to act as they are within the same container so they have to be connected using `localhost` (or `127.0.0.1`).
+2. Zigbee2mqtt - in `/home-assistant/zigbee2mqtt/data/configuration.yml` change `mqtt:server` to `mqtt://localhost`
+3. HASS - in Integrations (Settings -> Devices & Services -> Integrations Tab) update MQTT broker options (MQTT -> CONFIGURE -> RE-CONFIGURE MQTT) to broker `localhost`
 
 # Troubleshooting
 
