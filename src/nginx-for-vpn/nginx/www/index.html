@@ -1,0 +1,30 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Container list</title>
+    <link href="style/style.css" rel="stylesheet"/>
+    <script src="src/script.js"></script>
+</head>
+<body>
+<div class="container">
+    <h2>Containers</h2>
+    <ul class="responsive-table">
+        <li class="table-header">
+            <div class="col col-1">Name</div>
+            <div class="col col-2">Container Name</div>
+            <div class="col col-3">Port</div>
+            <div class="col col-4">Redirect</div>
+        </li>
+        <li class="table-row">
+            <div class="col col-1" data-label="Name">adminer</div>
+            <div class="col col-2" data-label="Container Name">adminer</div>
+            <div class="col col-3" data-label="Port"></div>
+            <div class="col col-4" data-label="Redirect"><img onclick="redirectToPort(this)"
+                                                              src="resource/icons8-link-24.png"/></div>
+        </li>
+</ul>
+</div>
+</body>
+</html>

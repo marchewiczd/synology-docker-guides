@@ -21,7 +21,17 @@ services:
         cap_add:
             - net_admin
             - sys_module
-            
+
+    web:
+        image: nginx:stable-alpine
+        volumes:
+            - ./nginx/www:/usr/share/nginx/html
+        environment:
+            - NGINX_PORT=80  
+        depends_on:
+            - vpn
+        network_mode: service:vpn
+      
     mqtt:
         image: eclipse-mosquitto
         restart: unless-stopped
@@ -47,14 +57,14 @@ services:
         network_mode: service:vpn
             
     hass:
-       image: ghcr.io/home-assistant/home-assistant:stable
-       restart: unless-stopped
-       volumes:
+        image: ghcr.io/home-assistant/home-assistant:stable
+        restart: unless-stopped
+        volumes:
             - ./hass:/config
             - ./hass/localtime:/etc/localtime:ro
             - /run/dbus:/run/dbus:ro
-       privileged: true
-       depends_on:
+        privileged: true
+        depends_on:
             - mqtt
             - zigbee
             - vpn
